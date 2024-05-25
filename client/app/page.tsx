@@ -1,31 +1,94 @@
 'use client';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import  Link  from "next/link";
+import Navbar from "./components/Navbar"
+interface SingleAnime {
+  "mal_id": number,
+  "title": string
+}
+interface SeasonalAnime {
+  "pagination": Object,
+  "data": SingleAnime[],
+}
 
-type SeasonalAnime = Object[];
-
+interface SingleManga {
+  "mal_id": number,
+  "title": string
+}
+interface TopManga {
+  "pagination": Object,
+  "data": SingleManga[],
+}
 function Home() {
+  let [seasonalAnimeData, setSeasonalAnimeData] = useState<SeasonalAnime>({pagination:{}, data:[]})
+  let [topMangaData, setTopMangaData] = useState<TopManga>({pagination:{}, data:[]})
+  let BASE_URL:string = "http://localhost:8080/api"
+
   useEffect(() => {
-    fetch("http://localhost:8080/api/anime/seasonal/now")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
+    fetch(`${BASE_URL}/anime/seasonal/now`)
+      .then(async (res) => {
+        if (res.status === 200) {
+          const data = await res.json();
+          return data;
+        } else if (res.status === 400) {
+          throw new Error("Bad Request")
+        } else {
+          throw new Error("Internal server error")
         }
-        return res.json();
       })
       .then((seasonalRes:SeasonalAnime) => {
         console.log(seasonalRes);
+        setSeasonalAnimeData(seasonalRes);
       })
       .catch((err) => console.error('Error fetching data:', err));
   }, []);
 
+  useEffect(() => {
+    fetch(`${BASE_URL}/manga/top`)
+      .then(async (res) => {
+        if (res.status === 200) {
+          const data = await res.json();
+          return data;
+        } else if (res.status === 400) {
+          throw new Error("Bad Request")
+        } else {
+          throw new Error("Internal server error")
+        }
+      })
+      .then((topMangaRes:TopManga) => {
+        console.log(topMangaRes);
+        setTopMangaData(topMangaRes);
+      })
+      .catch((err) => console.error('Error fetching data:', err));
+  }, [])
+
   return (
     <div>
-      Home
-      <Link href="/anime">Go to AnimePage</Link>
+      <Navbar />
+      <div>
+        <h1>Cutana</h1>
+        <p>A Database for Anime and Manga</p>
+      </div>
+      {seasonalAnimeData && (
+        <div>
+          <h1>Anime for this seasons</h1>
+          {seasonalAnimeData.data.map((anime) => (
+            <div key={anime.mal_id}>{anime.title}</div>
+          ))}
+        </div>
+      )}
+
+      {topMangaData && (
+        <div>
+          <h1>Top Manga</h1>
+          {topMangaData.data.map((manga) => (
+            <div key={manga.mal_id}>{manga.title}</div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-  
+
 export default Home;
