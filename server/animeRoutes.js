@@ -74,6 +74,28 @@ router.get("/seasons", (req, res) => {
         })
 })
 
+router.get("/top", (req, res) => {
+    fetch(`${BASE_URL}/top/anime`)
+        .then((response) => {
+            console.log(response.status)
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 400) {
+                res.status(400).send();
+            } else {
+                res.status(500).send();
+            }            
+        })
+        .then((topAnime) => {
+            res.status(200).json(topAnime)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send();
+        })
+
+})
+
 router.get("/:id", (req, res) => {
     console.log(req.params.id)
 })
