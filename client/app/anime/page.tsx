@@ -2,133 +2,155 @@
 
 import React, { useEffect, useState } from 'react'
 import Select, { SingleValue, MultiValue, ActionMeta } from 'react-select';
-interface SingleAnime {
-  "mal_id": number,
-  "title": string
-}
-interface AnimeData {
-  "pagination": Object,
-  "data": SingleAnime[],
-}
 
-interface Option {
-  value: string;
-  label:string;
-}
 
-interface Season {
-  year: number;
-  season: string
+interface SeasonInfo {
+  "year": number | undefined;
+  "season": string | undefined;
 }
 
 interface SeasonOption {
-  label: string;
-  value: Season
+  "label": string | undefined;
+  "value": SeasonInfo | undefined;
 }
 
 interface SeasonalYear {
-  year:number,
-  seasons: string[]
+  "year": number | undefined;
+  "seasons": string[] | undefined
 }
 
-interface SeasonsData {
-  "pagination": Object,
-  "data": SeasonalYear[]
+interface SeasonQueryRes {
+  "pagination": {} | undefined;
+  "data": SeasonalYear[] | undefined
 }
 
-const categoryOptions = [
-  {value: "Seasonal", label: "Seasonal"},
-  {value: "Top", label: "Top"}
-]
+interface SeasonalAnimeQueryRes {
+  "pagination": {} | undefined;
+  "data": Anime[] | undefined
+}
 
-const defaultCategory = {value: "Seasonal", label:"Seasonal"}
+interface Anime {
+  "mal_id": number | undefined;
+  "title": string | undefined;
+  "image": string | undefined;
+}
 function AnimePage() {
-  const [animeData, setAnimeData] = useState<AnimeData>({pagination: {}, data: []})
-  const [category, setCategory] = useState<string>("Seasonal")
-  const [season, setSeason] = useState<string>("")
-  const [seasonList, setSeasonList] = useState<SeasonOption[]>([])
+  const [seasonalAnimeData, setSeasonalAnimeData] = useState<SeasonalAnimeQueryRes>({"pagination":{}, "data": []});
+  const [seasons, setSeasons] = useState<SeasonOption[]>([]);
+  const [initialLoad, setInitialLoad] = useState<Boolean>(true);
+  const [selectedSeason, setSelectedSeason] = useState<SeasonOption>({"label": "", "value": {"year": 0, "season": ""}})
   let BASE_URL:string = "http://localhost:8080/api"
 
   useEffect(() => {
-    fetch(`${BASE_URL}/anime/seasonal/now`)
-      .then(async (res) => {
-        if (res.status === 200) {
-          const data = await res.json();
-          return data;
-        } else if (res.status === 400) {
-          throw new Error("Bad Request")
-        } else {
-          throw new Error("Internal server error")
-        }
-      })
-      .then((animeData:AnimeData) => {
-        console.log(animeData);
-        setAnimeData(animeData);
-      })
-      .catch((err) => console.error('Error fetching data:', err));
-  }, []);
+    fetchSeasons();
+  },[])
 
   useEffect(() => {
-    fetch(`${BASE_URL}/anime/seasons`)
-      .then((res) => {
-        if (res.status === 200) {
-          if (res !== undefined) {
-            return res.json();
-          }
-        } else if (res.status === 400) {
-          throw new Error("Bad Request")
-        } else {
-          throw new Error("Internal server error")
-        }
-      })
-      .then((seasonsData:SeasonsData) => {
-        if (seasonsData !==undefined) {
-          let seasons:SeasonOption[] = []
-          seasonsData.data.map((seasonalYear:SeasonalYear) => {
-            seasonalYear.seasons.map((season) => {
-              seasons.push({label: `${season}${seasonalYear.year}`, value: {year:seasonalYear.year, season:season}})
-            })
-          })
-          setSeason(seasons[0].label);
-          setSeasonList(seasons);
-        } else {
-          throw new Error("seasonsData was undefined")
-        }
-
-      })
-      .catch((err) => {
-        console.log("made it in error")
-      })
-  }, [])
+    setTimeout(fetchSeasonalAnime, 3000)
+  },[])
 
   useEffect(() => {
-
-  }, [seasonList])
-
-  function handleChangeCategory(selectedOption: SingleValue<Option>) {
-    if (selectedOption !== null) {
-      setCategory(selectedOption.value)
-    } 
-  }
-
-  function handleChangeSeason(selectedOption: SingleValue<SeasonOption>) {
-    if (selectedOption !== null) {
-      setSeason(selectedOption.label)
-      console.log(selectedOption.value);
+    console.log("rerender")
+    if (!initialLoad) {
+      fetchAnimeFromSeason(selectedSeason.value?.year,selectedSeason.value?.season)
     }
+  }, [selectedSeason])
+
+  function fetchSeasons() {
+    fetch(`${BASE_URL}/anime/seasons`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 400) {
+          console.error("Got a 400")
+          return null;
+        } else {
+          console.error("Got a 500")
+          return null;
+        }
+      })
+      .then((seasonsData:SeasonQueryRes) => { 
+        console.log(seasonsData);
+        let szns:SeasonOption[] = []
+        seasonsData.data?.map((seasonalYear:SeasonalYear) => {
+          seasonalYear.seasons?.map((season:string) => {
+            szns.push({
+              "label": `${season}${seasonalYear.year}`, 
+              "value": {
+                "year": seasonalYear.year,
+                "season":season
+              }})
+          })
+        })
+        setSeasons(szns);
+        setSelectedSeason(szns[0])
+      })
+      .catch((err) => console.log(err))
   }
+
+  function fetchSeasonalAnime() {
+    fetch(`${BASE_URL}/anime/seasonal/now`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 400) {
+          console.error("Got a 400")
+          return null;
+        } else {
+          console.error("Got a 500")
+          return null;
+        }
+      })
+      .then((seasonalAnimeData:SeasonalAnimeQueryRes) => { 
+        setSeasonalAnimeData(seasonalAnimeData);
+        setInitialLoad(false);
+      })
+      .catch((err) => console.log(err))
+  }
+
+  function handleSeasonChange(event:SingleValue<SeasonOption>) {
+
+    let sznInfo:SeasonInfo = {
+      "season": event?.value?.season,
+      "year":event?.value?.year
+    }
+
+    let szn:SeasonOption = {
+      label: event?.label,
+      value: sznInfo
+    }
+    setSelectedSeason(szn)
+    console.log(selectedSeason);
+  }
+
+  function fetchAnimeFromSeason(year:number|undefined, season:string|undefined) {
+    fetch(`${BASE_URL}/anime/seasonal/${year}/${season}`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 400) {
+          console.error("Got a 400")
+          return null;
+        } else {
+          console.error("Got a 500")
+          return null;
+        }
+      })
+      .then((seasonalAnimeData:SeasonalAnimeQueryRes) => {
+        setSeasonalAnimeData(seasonalAnimeData);
+      })
+  }
+
   return (
     <div>
-      <label htmlFor="selectCategory"></label>
-      <Select instanceId="categoryOptions" options={categoryOptions} defaultValue={defaultCategory} onChange={handleChangeCategory}/>
-      {seasonList.length > 0 && (
-        <Select instanceId="seasonOptions" options={seasonList} defaultValue={seasonList[0]} onChange={handleChangeSeason}></Select>
+      {seasons && (
+        <Select instanceId="seasonOptions" options={seasons} defaultValue={seasons[0]} onChange={handleSeasonChange}/>
       )}
-      {animeData && (
+
+      {seasonalAnimeData && (
         <div>
-          <h1>Anime for this seasons</h1>
-          {animeData.data.map((anime) => (
-            <div key={anime.mal_id}>{anime.title}</div>
+          {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
+            <p key={anime.mal_id}>{anime.title}</p>
           ))}
         </div>
       )}
