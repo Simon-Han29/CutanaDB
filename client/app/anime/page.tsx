@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import Select, { SingleValue, MultiValue, ActionMeta } from 'react-select';
 import Navbar from '../components/Navbar';
-import { useSearchParams } from 'next/navigation';
 
 interface SeasonInfo {
   "year": number | undefined;
@@ -48,12 +47,9 @@ function AnimePage() {
   const [initialLoad, setInitialLoad] = useState<Boolean>(true);
   const [selectedSeason, setSelectedSeason] = useState<SeasonOption>({"label": "", "value": {"year": 0, "season": ""}})
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>("Seasonal")
-  const searchParams = useSearchParams()
-  const searchTerm = searchParams.get("q");
-  let BASE_URL:string = "http://localhost:8080/api"
+  const BASE_URL:string = "http://localhost:8080/api"
 
   useEffect(() => {
-    console.log(searchTerm)
     console.log(selectedCategory);
     fetchSeasons();
   },[])
