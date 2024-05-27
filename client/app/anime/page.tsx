@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Select, { SingleValue, MultiValue, ActionMeta } from 'react-select';
 import Navbar from '../components/Navbar';
+import SearchBar from '../components/SearchBar';
 
 interface SeasonInfo {
   "year": number | undefined;
@@ -189,6 +190,7 @@ function AnimePage() {
 
   return (
     <div>
+      <SearchBar/>
       <Navbar/>
       <Select instanceId="categoryOptions" options={categoryOptions} defaultValue={categoryOptions[0]} onChange={handleChangeCategory}></Select>
       {seasons && selectedCategory === "Seasonal" && (
