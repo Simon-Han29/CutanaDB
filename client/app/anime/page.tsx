@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import Select, { SingleValue, MultiValue, ActionMeta } from 'react-select';
-
+import Navbar from '../components/Navbar';
+import SearchBar from '../components/SearchBar';
 
 interface SeasonInfo {
   "year": number | undefined;
@@ -24,7 +25,7 @@ interface SeasonQueryRes {
   "data": SeasonalYear[] | undefined
 }
 
-interface SeasonalAnimeQueryRes {
+interface AnimeQueryRes {
   "pagination": {} | undefined;
   "data": Anime[] | undefined
 }
@@ -34,14 +35,23 @@ interface Anime {
   "title": string | undefined;
   "image": string | undefined;
 }
+
+
+const categoryOptions = [
+  {"value": "Seasonal", "label": "Seasonal"},
+  {"value": "Top", "label": "Top"}
+]
 function AnimePage() {
-  const [seasonalAnimeData, setSeasonalAnimeData] = useState<SeasonalAnimeQueryRes>({"pagination":{}, "data": []});
+  const [seasonalAnimeData, setSeasonalAnimeData] = useState<AnimeQueryRes>({"pagination":{}, "data": []});
+  const [topAnimeData, setTopAnimeData] = useState<AnimeQueryRes>({"pagination":{}, "data": []})
   const [seasons, setSeasons] = useState<SeasonOption[]>([]);
   const [initialLoad, setInitialLoad] = useState<Boolean>(true);
   const [selectedSeason, setSelectedSeason] = useState<SeasonOption>({"label": "", "value": {"year": 0, "season": ""}})
-  let BASE_URL:string = "http://localhost:8080/api"
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>("Seasonal")
+  const BASE_URL:string = "http://localhost:8080/api"
 
   useEffect(() => {
+    console.log(selectedCategory);
     fetchSeasons();
   },[])
 
@@ -50,11 +60,26 @@ function AnimePage() {
   },[])
 
   useEffect(() => {
-    console.log("rerender")
     if (!initialLoad) {
       fetchAnimeFromSeason(selectedSeason.value?.year,selectedSeason.value?.season)
     }
   }, [selectedSeason])
+
+  useEffect(() => {
+    console.log(selectedCategory)
+    if (!initialLoad) {
+      if(selectedCategory === "Seasonal") {
+        if (seasonalAnimeData.data?.length === 0) {
+          setTimeout(fetchSeasonalAnime, 2000)
+        }        
+      } else if (selectedCategory === "Top") {
+        if (topAnimeData.data?.length === 0) {
+          setTimeout(fetchTopAnime, 2000)
+        }
+        
+      }
+    }
+  }, [selectedCategory])
 
   function fetchSeasons() {
     fetch(`${BASE_URL}/anime/seasons`)
@@ -101,7 +126,7 @@ function AnimePage() {
           return null;
         }
       })
-      .then((seasonalAnimeData:SeasonalAnimeQueryRes) => { 
+      .then((seasonalAnimeData:AnimeQueryRes) => { 
         setSeasonalAnimeData(seasonalAnimeData);
         setInitialLoad(false);
       })
@@ -136,20 +161,51 @@ function AnimePage() {
           return null;
         }
       })
-      .then((seasonalAnimeData:SeasonalAnimeQueryRes) => {
+      .then((seasonalAnimeData:AnimeQueryRes) => {
         setSeasonalAnimeData(seasonalAnimeData);
+      })
+  }
+
+  function handleChangeCategory(event:SingleValue<{ value: string | undefined; label: string | undefined; }>) {
+      setSelectedCategory(event?.value);
+  }
+
+  function fetchTopAnime() {
+    fetch(`${BASE_URL}/anime/top`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 400) {
+          console.error("Got a 400")
+          return null;
+        } else {
+          console.error("Got a 500")
+          return null;
+        }        
+      })
+      .then((topAnimeData:AnimeQueryRes) => {
+        setTopAnimeData(topAnimeData)
       })
   }
 
   return (
     <div>
-      {seasons && (
+      <SearchBar/>
+      <Navbar/>
+      <Select instanceId="categoryOptions" options={categoryOptions} defaultValue={categoryOptions[0]} onChange={handleChangeCategory}></Select>
+      {seasons && selectedCategory === "Seasonal" && (
         <Select instanceId="seasonOptions" options={seasons} defaultValue={seasons[0]} onChange={handleSeasonChange}/>
       )}
-
-      {seasonalAnimeData && (
+      {seasonalAnimeData && selectedCategory === "Seasonal" && (
         <div>
           {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
+            <p key={anime.mal_id}>{anime.title}</p>
+          ))}
+        </div>
+      )}
+      {topAnimeData && selectedCategory === "Top" && (
+        <div>
+          {topAnimeData.data !== undefined && topAnimeData.data.map((anime) => (
             <p key={anime.mal_id}>{anime.title}</p>
           ))}
         </div>

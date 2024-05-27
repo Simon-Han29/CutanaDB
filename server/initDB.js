@@ -12,12 +12,11 @@ const createTables = async () => {
       id SERIAL PRIMARY KEY,
       username VARCHAR(100) NOT NULL,
       password VARCHAR(100) NOT NULL,
-      userID VARCHAR(15) NOT NULL,
-      animeList JSONB,
-      mangaList JSONB,
+      uid VARCHAR(15) NOT NULL,
+      animelist JSONB,
       following JSONB,
       followers JSONB,
-      customLists JSONB
+      customlists JSONB
     );
   `;
   

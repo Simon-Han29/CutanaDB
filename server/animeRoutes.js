@@ -74,8 +74,69 @@ router.get("/seasons", (req, res) => {
         })
 })
 
+router.get("/top", (req, res) => {
+    fetch(`${BASE_URL}/top/anime`)
+        .then((response) => {
+            console.log(response.status)
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 400) {
+                res.status(400).send();
+            } else {
+                res.status(500).send();
+            }            
+        })
+        .then((topAnime) => {
+            res.status(200).json(topAnime)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send();
+        })
+
+})
+
+router.get("/search", (req, res) => {
+    const searchTerm = req.query.q;
+    fetch(`${BASE_URL}/anime?q=${searchTerm}`)
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 400) {
+                res.status(400).send();
+            } else {
+                res.status(500).send();
+            }  
+        })
+        .then((searchResults) => {
+            res.status(200).json(searchResults)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send();
+        })
+})
+
 router.get("/:id", (req, res) => {
     console.log(req.params.id)
+    const id = req.params.id;
+    fetch(`${BASE_URL}/anime/${id}`)
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 400) {
+                res.status(400).send();
+            } else {
+                res.status(500).send();
+            } 
+        })
+        .then((searchResults) => {
+            res.status(200).json(searchResults)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send();
+        })
 })
 
 module.exports = router;

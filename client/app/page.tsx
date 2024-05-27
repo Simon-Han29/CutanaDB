@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import  Link  from "next/link";
 import Navbar from "./components/Navbar"
+import SearchBar from "./components/SearchBar";
 interface SingleAnime {
   "mal_id": number,
   "title": string
@@ -65,6 +66,7 @@ function Home() {
 
   return (
     <div>
+      <SearchBar/>
       <Navbar />
       <div>
         <h1>Cutana</h1>
