@@ -14,10 +14,11 @@ router.get("/seasonal/now", (req, res) => {
                 response.status(400).send();
             } else {
                 console.log(response.status)
-                
             }
         })
         .then((currentSeasonalAnime) => {
+            console.log("In seasonal now")
+            console.log(req.session);
             res.status(200).json(currentSeasonalAnime);
         })
         .catch((err) => {

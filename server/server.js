@@ -8,20 +8,36 @@ const client = require('./db');
 const PORT = 8080;
 const animeRoutes = require("./animeRoutes")
 const mangaRoutes = require("./mangaRoutes")
-
-app.use(cors())
+// const secret = generateRandomId(15)
+app.use(cors({
+    origin: 'http://localhost:3000', // or whatever your Next.js app's URL is
+    credentials: true
+  }));
+  app.use(
+    session({
+      secret: "some secret",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 3600000,
+        httpOnly: true,
+        secure: false, // set to true if you're using https
+        sameSite: 'lax' // or 'strict' or 'none' based on your needs
+      }
+    })
+  );
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  session({
-    secret: generateRandomId(15),
-    resave: false,
-    saveUninitialized: true,
-  })
-);
 
-app.get("/api/home", (req, res) => {
-    res.json([{message: "Hello world"}])
+
+app.get("/api/isLoggedIn", (req, res) => {
+    // console.log(req.session);
+    if (req.session.uid) {
+        console.log(req.session)
+        res.status(200).send();
+    } else {
+        res.status(404).send();
+    }
 })
 app.post("/api/signup", async (req, res) => {
     try {
@@ -77,6 +93,8 @@ app.post("/api/login", async (req, res) => {
             if (userInfo.password === password) {
                 req.session.uid = userInfo.uid;
                 req.session.username = userInfo.username;
+                req.session.save();
+                console.log(req.session);
                 res.status(201).send();
             } else {
                 res.status(401).send("incorrect password");
@@ -86,6 +104,17 @@ app.post("/api/login", async (req, res) => {
         req.status(500).send();
     } 
 })
+
+app.post("/api/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).send("Internal Server Error");
+      }
+      res.clearCookie('connect.sid'); // Assuming 'connect.sid' is the name of the session cookie
+      res.status(200).send("Logged out");
+    });
+  });
 
 app.use("/api/anime", animeRoutes)
 app.use("/api/manga", mangaRoutes)

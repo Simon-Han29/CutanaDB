@@ -15,7 +15,7 @@ router.get("/top", (req, res) => {
       }
     })
     .then((topManga) => {
-      console.log(topManga)
+      // console.log(topManga)
       res.status(200).json(topManga);
     })
     .catch((err) => {

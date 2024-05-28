@@ -39,7 +39,6 @@ function Home() {
         }
       })
       .then((seasonalRes:SeasonalAnime) => {
-        console.log(seasonalRes);
         setSeasonalAnimeData(seasonalRes);
       })
       .catch((err) => console.error('Error fetching data:', err));
@@ -58,7 +57,6 @@ function Home() {
         }
       })
       .then((topMangaRes:TopManga) => {
-        console.log(topMangaRes);
         setTopMangaData(topMangaRes);
       })
       .catch((err) => console.error('Error fetching data:', err));
