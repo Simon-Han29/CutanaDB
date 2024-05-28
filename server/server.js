@@ -8,6 +8,7 @@ const client = require('./db');
 const PORT = 8080;
 const animeRoutes = require("./animeRoutes")
 const mangaRoutes = require("./mangaRoutes")
+const accountRoutes = require("./accountRoutes")
 // const secret = generateRandomId(15)
 app.use(cors({
     origin: 'http://localhost:3000', // or whatever your Next.js app's URL is
@@ -31,7 +32,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.get("/api/isLoggedIn", (req, res) => {
-    // console.log(req.session);
     if (req.session.uid) {
         console.log(req.session)
         res.status(200).send();
@@ -94,7 +94,6 @@ app.post("/api/login", async (req, res) => {
                 req.session.uid = userInfo.uid;
                 req.session.username = userInfo.username;
                 req.session.save();
-                console.log(req.session);
                 res.status(201).send();
             } else {
                 res.status(401).send("incorrect password");
@@ -107,17 +106,22 @@ app.post("/api/login", async (req, res) => {
 
 app.post("/api/logout", (req, res) => {
     req.session.destroy((err) => {
-      if (err) {
+        if (err) {
         console.error("Error destroying session:", err);
         return res.status(500).send("Internal Server Error");
-      }
-      res.clearCookie('connect.sid'); // Assuming 'connect.sid' is the name of the session cookie
-      res.status(200).send("Logged out");
+        }
+        res.clearCookie('connect.sid'); // Assuming 'connect.sid' is the name of the session cookie
+        res.status(200).send("Logged out");
     });
-  });
+});
 
+
+//routers
 app.use("/api/anime", animeRoutes)
 app.use("/api/manga", mangaRoutes)
+app.use("/api/account", accountRoutes)
+
+
 
 app.listen(PORT, () => {
     console.log("Listening on port: " + PORT)

@@ -4,7 +4,6 @@ const router = express.Router();
 const BASE_URL = 'https://api.jikan.moe/v4'
 
 router.get("/seasonal/now", (req, res) => {
-    console.log("in /api/anime/seasonal/now")
     fetch(`${BASE_URL}/seasons/now`)
         .then((response) => {
             if (response.status === 200) {
@@ -17,8 +16,6 @@ router.get("/seasonal/now", (req, res) => {
             }
         })
         .then((currentSeasonalAnime) => {
-            console.log("In seasonal now")
-            console.log(req.session);
             res.status(200).json(currentSeasonalAnime);
         })
         .catch((err) => {
