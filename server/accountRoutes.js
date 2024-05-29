@@ -18,4 +18,78 @@ router.get("/", async (req, res) => {
 
 })
 
+router.get("/animelist/:id", async(req, res) => {
+  const uid = req.session.uid;
+  if (uid === undefined) {
+    res.status(401).send();
+  } else {
+    const animeId = req.params.id;
+    const getListQuery = `
+      SELECT animelist
+      FROM users
+      WHERE uid=$1
+    `
+  
+    const queryRes = await client.query(getListQuery, [uid])
+    const animelist = queryRes.rows[0].animelist;
+    if (animelist[animeId] === undefined) {
+      res.status(404).send();
+    } else {
+      res.status(200).send();
+    }
+  }
+  
+})
+
+router.post("/animelist", async(req, res) => {
+  const uid = req.session.uid;
+  if (uid === undefined) {
+    res.status(401).send();
+  } else {
+    const mal_id = req.body.mal_id;
+    const getAnimeListQuery = `
+      SELECT animelist
+      FROM users 
+      WHERE uid=$1
+    `
+    let queryRes = await client.query(getAnimeListQuery, [uid])
+    let animelist = queryRes.rows[0].animelist
+    if (animelist[mal_id] === undefined) {
+      animelist[mal_id] = req.body;
+      let updateListQuery = `
+        UPDATE users
+        SET animelist=$1
+        WHERE uid=$2
+      `
+      await client.query(updateListQuery, [animelist, uid])
+      res.status(201).send();
+    } else {
+      res.status(409).send();
+    }
+  }
+})
+
+router.delete("/animelist/:mal_id", async (req, res) => {
+  const uid = req.session.uid;
+  if (uid === undefined) {
+    res.status(401).send();
+  } else {
+    const mal_id = req.body.mal_id;
+    const getAnimeListQuery = `
+    SELECT animelist
+    FROM users 
+    WHERE uid=$1
+  `
+  let queryRes = await client.query(getAnimeListQuery, [uid])
+  let animelist = queryRes.rows[0].animelist
+  delete animelist[mal_id]
+  let updateListQuery = `
+    UPDATE users
+    SET animelist=$1
+    WHERE uid=$2
+  `
+  await client.query(updateListQuery, [animelist, uid])
+  res.status(200).send();
+  }
+})
 module.exports = router;

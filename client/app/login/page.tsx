@@ -1,7 +1,8 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import React, {useState} from 'react'
-
+import Navbar from '../components/Navbar'
+import Link from 'next/link'
 const LoginPage = () => {
   const BASE_URL:string = "http://localhost:8080/api"
   const [usernameText, setUsernameText] = useState("")
@@ -44,9 +45,11 @@ const LoginPage = () => {
 
   return (
     <div>
+      <Navbar />
       <input type="text" placeholder="Username" onChange={handleUsernameChange}/>
       <input type="text" placeholder="Password" onChange={handlePasswordChange}/>
       <button onClick={handleLogin}>Login</button>
+      <Link href="/signup">{"Don't have an account? Sign up"}</Link>
     </div>
   )
 }

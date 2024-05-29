@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Select, { SingleValue, MultiValue, ActionMeta } from 'react-select';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
+import Link from 'next/link'
 
 interface SeasonInfo {
   "year": number | undefined;
@@ -199,14 +200,16 @@ function AnimePage() {
       {seasonalAnimeData && selectedCategory === "Seasonal" && (
         <div>
           {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
-            <p key={anime.mal_id}>{anime.title}</p>
+            // <p key={anime.mal_id}>{anime.title}</p>
+            <Link key={anime.mal_id} href={`/anime/${anime.mal_id}`}>{anime.title}</Link>
           ))}
         </div>
       )}
       {topAnimeData && selectedCategory === "Top" && (
         <div>
           {topAnimeData.data !== undefined && topAnimeData.data.map((anime) => (
-            <p key={anime.mal_id}>{anime.title}</p>
+            // <p key={anime.mal_id}>{anime.title}</p>
+            <Link key={anime.mal_id} href={`/anime/${anime.mal_id}`}></Link>
           ))}
         </div>
       )}
