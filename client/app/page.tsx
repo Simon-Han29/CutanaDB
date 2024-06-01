@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import  Link  from "next/link";
 import Navbar from "./components/Navbar"
 import SearchBar from "./components/SearchBar";
+import { Festive } from "next/font/google";
 interface SingleAnime {
   "mal_id": number,
   "title": string
@@ -63,30 +64,76 @@ function Home() {
   }, [])
 
   return (
-    <div>
-      <SearchBar/>
-      <Navbar />
-      <div>
-        <h1>Cutana</h1>
-        <p>A Database for Anime and Manga</p>
+    <div className="snap-y overflow-y-scroll snap-mandatory h-screen">
+      <div className="bg-black text-white h-screen snap-start">
+        <div>
+          <Navbar/>
+        </div>
+        <div className="
+          flex flex-col 
+          justify-center 
+          items-center 
+          mt-40 
+          mx-28 
+          h-[70%] 
+          bg-gradient-to-b 
+          from-red-950 from-30% 
+          to-black to-100%
+          rounded-[20px]
+          shadow-md
+        ">
+          <h1 className="text-[128px] font-extrabold fon-arial">Cutana</h1>
+          <p>A Database for Anime and Manga</p>
+        </div>
+        <div className="flex justify-center">
+          <p>Powered by Jikan API</p>
+        </div>
       </div>
-      {seasonalAnimeData && (
-        <div>
-          <h1>Anime for this seasons</h1>
-          {seasonalAnimeData.data.map((anime) => (
-            <div key={anime.mal_id}>{anime.title}</div>
-          ))}
+      <div className="h-screen snap-start bg-black py-10 px-28 flex justify-center items-center">
+        <div className="
+          text-white
+          flex
+          flex-col
+          justify-center
+          items-center
+          
+          h-[90%]
+          w-[90%]
+          bg-gradient-to-b
+          from-black from-10%
+          via-red-950 via-30%
+          to-black to-100%
+        ">
+          <p>Browse Your Favorite Anime</p>
+          <div>
+            {seasonalAnimeData && (
+              <div>
+                {seasonalAnimeData.data.map((anime) => (
+                  <div key={anime.mal_id}>
+                    <p>{anime.title}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      )}
-
-      {topMangaData && (
-        <div>
-          <h1>Top Manga</h1>
-          {topMangaData.data.map((manga) => (
-            <div key={manga.mal_id}>{manga.title}</div>
-          ))}
+      </div>
+      <div className="h-screen snap-start bg-black py-10 px-28 flex justify-center items-center">
+        <div className="
+          h-[90%] 
+          w-[90%]
+          bg-gradient-to-b 
+          from-black from-30%
+          to-red-950 to 100%
+          rounded-[20px]
+          flex
+          flex-col
+          justify-center
+          items-center
+        ">
+          <p className="text-white">Browse the top Manga</p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
