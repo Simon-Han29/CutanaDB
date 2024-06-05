@@ -1,7 +1,8 @@
 'use client'
 
 import React, {useState} from 'react'
-
+import Navbar from '../components/Navbar'
+import Link from 'next/link'
 const SignupPage = () => {
   const BASE_URL:string = "http://localhost:8080/api"
   const [usernameText, setUsernameText] = useState("")
@@ -47,9 +48,11 @@ const SignupPage = () => {
 
   return (
     <div>
+      <Navbar />
       <input type="text" placeholder="Username" onChange={handleUsernameChange}/>
       <input type="text" placeholder="Password" onChange={handlePasswordChange}/>
       <button onClick={handleSignUp}>Create Account</button>
+      <Link href="/login">Already have an account? Login</Link>
     </div>
   )
 }

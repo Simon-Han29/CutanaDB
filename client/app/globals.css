@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.link-wrapper {
+    @apply mx-6 my-2 px-8 py-2 transition ease-in hover:bg-neutral-700 hover:text-white rounded-[20px] text-white
+}

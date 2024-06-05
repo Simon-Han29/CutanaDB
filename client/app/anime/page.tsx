@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 import Select, { SingleValue, MultiValue, ActionMeta } from 'react-select';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
-
+import Link from 'next/link'
+import Card from '../components/Card';
 interface SeasonInfo {
   "year": number | undefined;
   "season": string | undefined;
@@ -33,10 +34,17 @@ interface AnimeQueryRes {
 interface Anime {
   "mal_id": number | undefined;
   "title": string | undefined;
-  "image": string | undefined;
+  "images": Images;
 }
 
+interface Images {
+  "webp": ImageType,
+  "jpg": ImageType
+}
 
+interface ImageType {
+  "image_url": string
+}
 const categoryOptions = [
   {"value": "Seasonal", "label": "Seasonal"},
   {"value": "Top", "label": "Top"}
@@ -189,27 +197,39 @@ function AnimePage() {
   }
 
   return (
-    <div>
-      <SearchBar/>
+    <div className="bg-black min-h-screen">
       <Navbar/>
-      <Select instanceId="categoryOptions" options={categoryOptions} defaultValue={categoryOptions[0]} onChange={handleChangeCategory}></Select>
-      {seasons && selectedCategory === "Seasonal" && (
-        <Select instanceId="seasonOptions" options={seasons} defaultValue={seasons[0]} onChange={handleSeasonChange}/>
-      )}
-      {seasonalAnimeData && selectedCategory === "Seasonal" && (
-        <div>
-          {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
-            <p key={anime.mal_id}>{anime.title}</p>
-          ))}
+      <SearchBar/>
+      <div className="flex flex-row">
+        <div className="flex flex-row ml-8">
+          <label htmlFor="category" className='text-white self-center'>Category:</label>
+          <Select name="category" className="w-[150px]" instanceId="categoryOptions" options={categoryOptions} defaultValue={categoryOptions[0]} onChange={handleChangeCategory}></Select>
         </div>
-      )}
-      {topAnimeData && selectedCategory === "Top" && (
-        <div>
-          {topAnimeData.data !== undefined && topAnimeData.data.map((anime) => (
-            <p key={anime.mal_id}>{anime.title}</p>
-          ))}
-        </div>
-      )}
+          {seasons && selectedCategory === "Seasonal" && (
+            <div className="flex flex-row ml-4">
+              <label htmlFor="category" className='text-white self-center'>Season:</label>
+              <Select instanceId="seasonOptions" options={seasons} defaultValue={seasons[0]} onChange={handleSeasonChange}/>
+            </div>
+          )}
+        
+      </div>
+      <div className="flex justify-center flex-1">
+        {seasonalAnimeData && selectedCategory === "Seasonal" && (
+          <div className="flex flex-row flex-wrap">
+            {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
+              <Card key={anime.mal_id} mal_id={anime.mal_id} title={anime.title} image={anime.images.webp.image_url}/>
+            ))}
+          </div>
+        )}
+        {topAnimeData && selectedCategory === "Top" && (
+          <div className="flex flex-row flex-wrap">
+            {topAnimeData.data !== undefined && topAnimeData.data.map((anime) => (
+              <Card key={anime.mal_id} mal_id={anime.mal_id} title={anime.title} image={anime.images.webp.image_url}/>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }
