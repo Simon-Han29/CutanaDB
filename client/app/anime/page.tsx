@@ -197,37 +197,39 @@ function AnimePage() {
   }
 
   return (
-    <div className="bg-black h-[100%]">
+    <div className="bg-black min-h-screen">
       <Navbar/>
       <SearchBar/>
       <div className="flex flex-row">
-        <div className="flex flex-row">
-          <label htmlFor="category" className='text-white'>Category:</label>
+        <div className="flex flex-row ml-8">
+          <label htmlFor="category" className='text-white self-center'>Category:</label>
           <Select name="category" className="w-[150px]" instanceId="categoryOptions" options={categoryOptions} defaultValue={categoryOptions[0]} onChange={handleChangeCategory}></Select>
         </div>
           {seasons && selectedCategory === "Seasonal" && (
-            <div className="flex flex-row">
-              <label htmlFor="category" className='text-white'>Season:</label>
+            <div className="flex flex-row ml-4">
+              <label htmlFor="category" className='text-white self-center'>Season:</label>
               <Select instanceId="seasonOptions" options={seasons} defaultValue={seasons[0]} onChange={handleSeasonChange}/>
             </div>
           )}
         
       </div>
-      {seasonalAnimeData && selectedCategory === "Seasonal" && (
-        <div className="flex flex-row flex-wrap">
-          {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
-            <Card key={anime.mal_id} mal_id={anime.mal_id} title={anime.title} image={anime.images.webp.image_url}/>
-          ))}
-        </div>
-      )}
-      {topAnimeData && selectedCategory === "Top" && (
-        <div className="flex flex-row flex-wrap">
-          {topAnimeData.data !== undefined && topAnimeData.data.map((anime) => (
-            // <p key={anime.mal_id}>{anime.title}</p>
-            <Card key={anime.mal_id} mal_id={anime.mal_id} title={anime.title} image={anime.images.webp.image_url}/>
-          ))}
-        </div>
-      )}
+      <div className="flex justify-center flex-1">
+        {seasonalAnimeData && selectedCategory === "Seasonal" && (
+          <div className="flex flex-row flex-wrap">
+            {seasonalAnimeData.data !== undefined && seasonalAnimeData.data.map((anime) => (
+              <Card key={anime.mal_id} mal_id={anime.mal_id} title={anime.title} image={anime.images.webp.image_url}/>
+            ))}
+          </div>
+        )}
+        {topAnimeData && selectedCategory === "Top" && (
+          <div className="flex flex-row flex-wrap">
+            {topAnimeData.data !== undefined && topAnimeData.data.map((anime) => (
+              <Card key={anime.mal_id} mal_id={anime.mal_id} title={anime.title} image={anime.images.webp.image_url}/>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }

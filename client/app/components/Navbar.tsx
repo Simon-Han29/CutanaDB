@@ -45,9 +45,6 @@ const Navbar = () => {
               <Link href="/anime">Anime</Link>
             </div>
             <div className="link-wrapper">
-              <Link href="/manga">Manga</Link>
-            </div>
-            <div className="link-wrapper">
               <Link href="/customlists">CustomLists</Link>
             </div>
           </div>

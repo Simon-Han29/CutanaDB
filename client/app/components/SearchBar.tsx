@@ -19,8 +19,8 @@ const SearchBar = () => {
   }
 
   return (
-    <div>
-      <input type="text" placeholder='Anime Title' onKeyDown={search} />
+    <div className="mx-20 flex justify-end">
+      <input className="rounded-[20px] px-5 py-2 outline-none" type="text" placeholder='Search Anime Title' onKeyDown={search} />
     </div>
   )
 }

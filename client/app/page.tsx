@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import  Link  from "next/link";
 import Navbar from "./components/Navbar"
 import SearchBar from "./components/SearchBar";
-import { Festive } from "next/font/google";
 interface SingleAnime {
   "mal_id": number,
   "title": string
@@ -24,7 +23,7 @@ interface TopManga {
 }
 function Home() {
   let [seasonalAnimeData, setSeasonalAnimeData] = useState<SeasonalAnime>({pagination:{}, data:[]})
-  let [topMangaData, setTopMangaData] = useState<TopManga>({pagination:{}, data:[]})
+  // let [topMangaData, setTopMangaData] = useState<TopManga>({pagination:{}, data:[]})
   let BASE_URL:string = "http://localhost:8080/api"
 
   useEffect(() => {
@@ -45,23 +44,23 @@ function Home() {
       .catch((err) => console.error('Error fetching data:', err));
   }, []);
 
-  useEffect(() => {
-    fetch(`${BASE_URL}/manga/top`)
-      .then(async (res) => {
-        if (res.status === 200) {
-          const data = await res.json();
-          return data;
-        } else if (res.status === 400) {
-          throw new Error("Bad Request")
-        } else {
-          throw new Error("Internal server error")
-        }
-      })
-      .then((topMangaRes:TopManga) => {
-        setTopMangaData(topMangaRes);
-      })
-      .catch((err) => console.error('Error fetching data:', err));
-  }, [])
+  // useEffect(() => {
+  //   fetch(`${BASE_URL}/manga/top`)
+  //     .then(async (res) => {
+  //       if (res.status === 200) {
+  //         const data = await res.json();
+  //         return data;
+  //       } else if (res.status === 400) {
+  //         throw new Error("Bad Request")
+  //       } else {
+  //         throw new Error("Internal server error")
+  //       }
+  //     })
+  //     .then((topMangaRes:TopManga) => {
+  //       setTopMangaData(topMangaRes);
+  //     })
+  //     .catch((err) => console.error('Error fetching data:', err));
+  // }, [])
 
   return (
     <div className="snap-y overflow-y-scroll snap-mandatory h-screen">
@@ -131,7 +130,7 @@ function Home() {
           justify-center
           items-center
         ">
-          <p className="text-white">Browse the top Manga</p>
+          <p className="text-white">Add them to your list</p>
         </div>
       </div>
     </div>

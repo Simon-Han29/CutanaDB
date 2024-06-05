@@ -7,7 +7,7 @@ const client = require('./db');
 
 const PORT = 8080;
 const animeRoutes = require("./animeRoutes")
-const mangaRoutes = require("./mangaRoutes")
+// const mangaRoutes = require("./mangaRoutes")
 const accountRoutes = require("./accountRoutes")
 // const secret = generateRandomId(15)
 app.use(cors({
@@ -118,7 +118,7 @@ app.post("/api/logout", (req, res) => {
 
 //routers
 app.use("/api/anime", animeRoutes)
-app.use("/api/manga", mangaRoutes)
+// app.use("/api/manga", mangaRoutes)
 app.use("/api/account", accountRoutes)
 
 
