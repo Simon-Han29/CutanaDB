@@ -162,80 +162,91 @@ function fetchCharacterData() {
   }
 
   return (
-    <div>
+    <div className='bg-black text-white'>
       <Navbar />
       <SearchBar />
-      <div>
-        {animeData?.images?.webp?.image_url ? (
-          <Image src={animeData.images.webp.image_url} alt={animeData.title || 'Anime Image'} width={500} height={750} />
-        ) : (
-          <p>No image available</p>
-        )}
-        <p>{animeData?.title}</p>
-        {animeData?.titles.map((titleObj) => (
-          <div key={titleObj.type}>
-            {titleObj.type === "Japanese" ? (
-              <p>{titleObj.title}</p>
+      <div className="flex justify-center">
+        <div className="flex flex-col items-center w-[90%]">
+          <div className='flex flex-col items-center'>
+            {animeData?.images?.webp?.image_url ? (
+              <Image src={animeData.images.webp.image_url} alt={animeData.title || 'Anime Image'} width={200} height={400} />
             ) : (
-              <></>
+              <p>No image available</p>
             )}
-          </div>
-        ))}
-        {isInList ? (
-          <div>
-            <button onClick={handleRemoveFromList}>Remove From List</button>
-          </div>
-        ) : (
-          <div>
-            <button onClick={handleAddToList}>Add To List</button>
-          </div>
-        )}
-        <div>
-          <p>{animeData?.type}</p>
-          <p>{animeData?.episodes}</p>
-          <p>{animeData?.status}</p>
-          <p>{animeData?.duration}</p>
-          <p>{animeData?.rating}</p>
-          <p>{animeData?.rank}</p>
-          <p>{animeData?.score}</p>
-          <p>{animeData?.type}</p>
-          <p>{animeData?.season}</p>
-          <p>{animeData?.type}</p>
-          <p>{animeData?.year}</p>
-          {animeData?.genres.map((genre) => (
-            <div key={genre.mal_id}>
-              <p>{genre.name}</p>
-            </div>
-          ))}
-          {loadingCharacterData ? (
-            <p>Loading characters...</p>
-          ): (
+            <h1>{animeData?.title}</h1>
+            {animeData?.titles.map((titleObj) => (
+              <div key={titleObj.type}>
+                {titleObj.type === "Japanese" ? (
+                  <p>{titleObj.title}</p>
+                ) : (
+                  <></>
+                )}
+              </div>
+            ))}
+            {isInList ? (
+              <div className=''>
+                <button onClick={handleRemoveFromList}>Remove From List</button>
+              </div>
+            ) : (
+              <div>
+                <button className="border h-[50px] w-[200px] bg-red-600" onClick={handleAddToList}>Add To List</button>
+              </div>
+            )}
             <div>
-              {characterData && (
-                <div>
-                  <div>
-                    {characterData.map((character) => (
-                      <div key={character.character.name}>
-                        {character.character.images.webp.image_url ? (
-                          <div>
-                            <Image src={character.character.images.webp.image_url} alt={character.character.name || 'Anime Image'} width={200} height={400} />
-                            <p>{character.character.name}</p>
-                          </div>
-                          
-                          
-                        ) : (
-                          <p>No image available</p>
-                        )}
-                      </div>
-                    ))}
+              <p className='text-center'>Title: {animeData?.type}</p>
+              <p className='text-center'>Episodes: {animeData?.episodes}</p>
+              <p className='text-center'>Status: {animeData?.status}</p>
+              <p className='text-center'>Duration: {animeData?.duration}</p>
+              <p className='text-center'>Rating: {animeData?.rating}</p>
+              <p className='text-center'>Rank: {animeData?.rank}</p>
+              <p className='text-center'>Score: {animeData?.score}/10</p>
+              <p className='text-center'>Type: {animeData?.type}</p>
+              <p className='text-center'>Season: {animeData?.season}</p>
+              <p className='text-center'>Type: {animeData?.type}</p>
+              <p className='text-center'>Year:{animeData?.year}</p>
+              <div className='flex flex-row'>
+                Genres: 
+                {animeData?.genres.map((genre) => (
+                  <div key={genre.mal_id}>
+                    <p className='text-center'>{genre.name},</p>
                   </div>
-                  {characterData.map((character) => (
-                    <p key={character.character.name}>{character.character.name}</p>
-                  ))}
+                ))}
+              </div>
+
+              <p>Synopsis</p>
+              <p className="text-start">{animeData?.synopsis}</p>
+              <hr />
+
+              <p>Characters</p>
+              <hr />
+              {loadingCharacterData ? (
+                <p>Loading characters...</p>
+              ): (
+                <div>
+                  {characterData && (
+                    <div>
+                      <div className="flex flex-wrap">
+                        {characterData.map((character) => (
+                          <div key={character.character.name} className="m-2">
+                            {character.character.images.webp.image_url ? (
+                              <div>
+                                <Image src={character.character.images.webp.image_url} alt={character.character.name || 'Anime Image'} width={200} height={400} />
+                                <p className='text-center'>{character.character.name}</p>
+                              </div>
+                              
+                              
+                            ) : (
+                              <p>No image available</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

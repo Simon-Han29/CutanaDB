@@ -219,16 +219,17 @@ const SearchPage = () => {
     <div className="bg-black text-white">
       <Navbar></Navbar>
       <SearchBar/>
-      <button onClick={handleOpenMenu}>Filters</button>
+      <button className="m-5 border px-5 py-1 hover:bg-red-500 transition ease-in" onClick={handleOpenMenu}>Filters</button>
       {isMenuOpen && (
-        <div className='border'>
-          <button className="" onClick={handleCloseMenu}>Close Menu</button>
-          <p>Filters</p>
+        <div className="border flex flex-col mx-20 bg-slate-900 rounded-[25px]">
+          <button className="self-end mr-5 mt-5" onClick={handleCloseMenu}>Close Menu</button>
+          <p className="self-center">Filters</p>
           <div>
             <div>
-              <p>Genres</p>
-              <hr />
-              <div>
+              <hr className="my-2"/>
+              <p className="pl-2">Genres</p>
+              <hr className="my-2"/>
+              <div className="px-5">
                 {loadingGenres ? (
                   <p>loading...</p>
                 ): (
@@ -238,15 +239,16 @@ const SearchPage = () => {
                     ) : (
                       <div className="flex flex-wrap">
                         {genres.map((genre) => (
-                          <div key={genre.mal_id} className="border">
-                            <input
-                              type="checkbox"
-                              name="genre"
-                              className="circular-checkbox"
+                          <div key={genre.mal_id} className="border rounded-[20px] p-2 m-1">
+                            <label className="inline-flex items-center">
+                              <input type="checkbox" 
+                              className="hidden peer"
                               onChange={(event) => handleSelectGenre(event, genre.mal_id, genre.name)}
-                              checked={!!selectedGenres[genre.name]} // Convert to boolean
-                            />
-                            <label htmlFor="genre">{genre.name}</label>
+                              checked={!!selectedGenres[genre.name]}
+                              />
+                              <div className="w-5 h-5 bg-white border-2 border-gray-300 rounded-full peer-checked:bg-red-500 peer-checked:border-transparent peer-focus:ring-2 peer-focus:ring-blue-500"></div>
+                              <span className="ml-2 text-white">{genre.name}</span>
+                            </label>
                           </div>
                         ))}
                       </div>
@@ -257,72 +259,96 @@ const SearchPage = () => {
             </div>
 
             <div>
-              <p>Type</p>
-              <hr />
-              <div className="flex">
+              <hr className="mt-5"/>
+              <p className="pl-2 pt-5">Type</p>
+              <hr className="my-2"/>
+              <div className="flex flex-wrap px-5">
                 {typeOptions.map((type) => (
-                  <div key={type} className="border">
-                    <input type="radio" name="type" checked={selectedType===type} onChange={() => handleSelectType(type)}/>
-                    <label htmlFor="type">{type}</label>
+                  <div key={type} className="border rounded-[20px] p-2 m-1">
+                    <label className="inline-flex items-center">
+                      <input className="hidden peer" type="radio" name="type" checked={selectedType===type} onChange={() => handleSelectType(type)}/>
+                      <div className="w-5 h-5 bg-white border-2 border-gray-300 rounded-full peer-checked:bg-red-500 peer-checked:border-transparent peer-focus:ring-2 peer-focus:ring-blue-500"></div>
+                      <span className="ml-2 text-white">{type}</span>
+                    </label>
+
                   </div>                
                 ))}
               </div>
             </div>
 
             <div>
-              <p>Status</p>
-              <hr />
-              <div className="flex">
+              <hr className="mt-5"/>
+              <p className="pl-2 pt-5">Status</p>
+              <hr className="my-2"/>
+              <div className="flex flex-wrap px-5">
                 {statusOptions.map((status) => (
-                  <div key={status} className="border">
-                    <input type="radio" name="status" checked={selectedStatus===status} onChange={() => handleSelectStatus(status)}/>
-                    <label htmlFor="status">{status}</label>
+                  <div key={status} className="border rounded-[20px] p-2 m-1">
+                    <label className="inline-flex items-center">
+                      <input className="hidden peer" type="radio" name="status" checked={selectedStatus===status} onChange={() => handleSelectStatus(status)}/>
+                      <div className="w-5 h-5 bg-white border-2 border-gray-300 rounded-full peer-checked:bg-red-500 peer-checked:border-transparent peer-focus:ring-2 peer-focus:ring-blue-500"></div>
+                      <label htmlFor="status">{status}</label>
+                    </label>
                   </div>                
                 ))}
               </div>
             </div>
 
             <div>
-              <p>Rating</p>
-              <hr />
-              <div className="flex">
+              <hr className="mt-5"/>
+              <p className="pl-2 pt-5">Rating</p>
+              <hr className="my-2"/>
+              <div className="flex flex-wrap px-5">
                 {ratingOptions.map((rating) => (
-                  <div key={rating} className="border">
-                    <input type="radio" name="rating" checked={selectedRating===rating} onChange={() => handleSelectRating(rating)}/>
-                    <label htmlFor="rating">{rating}</label>
+                  <div key={rating} className="border rounded-[20px] p-2 m-1">
+                    <label className="inline-flex items-center">
+                      <input className="hidden peer" type="radio" name="rating" checked={selectedRating===rating} onChange={() => handleSelectRating(rating)}/>
+                      <div className="w-5 h-5 bg-white border-2 border-gray-300 rounded-full peer-checked:bg-red-500 peer-checked:border-transparent peer-focus:ring-2 peer-focus:ring-blue-500"></div>
+                      <span>{rating}</span>
+                    </label>
                   </div>                
                 ))}
               </div>
             </div>
 
             <div>
-              <p>Order</p>
-              <hr />
-              <div className="flex">
+              <hr className="mt-5"/>
+              <p className="pl-2 pt-5">Order</p>
+              <hr className="my-2"/>
+              <div className="flex flex-wrap px-5">
                 {orderOptions.map((order) => (
-                  <div key={order} className="border">
-                    <input type="radio" name="order" checked={selectedOrder===order} onChange={() => handleSelectOrder(order)}/>
-                    <label htmlFor="order">{order}</label>
+                  <div key={order} className="border rounded-[20px] p-2 m-1">
+                    <label className="inline-flex items-center">
+                      <input className="hidden peer" type="radio" name="order" checked={selectedOrder===order} onChange={() => handleSelectOrder(order)}/>
+                      <div className="w-5 h-5 bg-white border-2 border-gray-300 rounded-full peer-checked:bg-red-500 peer-checked:border-transparent peer-focus:ring-2 peer-focus:ring-blue-500"></div>
+                      <span>{order}</span>
+                    </label>
                   </div>                
                 ))}
               </div>
             </div>
 
             <div>
-              <p>Sort</p>
-              <hr />
-              <div className="flex">
+              <hr className="mt-5"/>
+              <p className="pl-2 pt-5">Sort</p>
+              <hr className="my-2"/>
+              <div className="flex flex-wrap px-5">
                 {sortOptions.map((sortOption) => (
-                  <div key={sortOption} className="border">
-                    <input type="radio" name="sort" checked={selectedSortOption===sortOption} onChange={() => handleSelectSortOption(sortOption)}/>
-                    <label htmlFor="sort">{sortOption}</label>
+                  <div key={sortOption} className="border rounded-[20px] p-2 m-1">
+                    <label className="inline-flex items-center">
+                      <input className="hidden peer" type="radio" name="sort" checked={selectedSortOption===sortOption} onChange={() => handleSelectSortOption(sortOption)}/>
+                      <div className="w-5 h-5 bg-white border-2 border-gray-300 rounded-full peer-checked:bg-red-500 peer-checked:border-transparent peer-focus:ring-2 peer-focus:ring-blue-500"></div>
+                      <label htmlFor="sort">{sortOption}</label>
+                    </label>
                   </div>                
                 ))}
               </div>
             </div>
 
           </div>
-          <button onClick={handleAdvancedSearch}>Show Results</button>
+          <hr className="mt-5"/>
+          <div className="flex justify-center">
+            <button className="h-[50px] w-32 bg-red-500 rounded-[20px]" onClick={handleAdvancedSearch}>Show Results</button>
+          </div>
         </div>
       )}
 

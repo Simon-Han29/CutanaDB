@@ -44,12 +44,17 @@ const LoginPage = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-black">
       <Navbar />
-      <input type="text" placeholder="Username" onChange={handleUsernameChange}/>
-      <input type="text" placeholder="Password" onChange={handlePasswordChange}/>
-      <button onClick={handleLogin}>Login</button>
-      <Link href="/signup">{"Don't have an account? Sign up"}</Link>
+      <div className='flex-1 flex min-h-[95vh] border justify-center items-center'>
+        <div className='flex flex-col items-center text-white border w-[400px] h-[500px] rounded-[20px]'>
+          <h1 className="text-3xl m-4">Sign in</h1>
+          <input className="m-2 p-2 rounded-[20px] text-black outline-none" type="text" placeholder="Username" onChange={handleUsernameChange}/>
+          <input className="m-2 p-2 rounded-[20px] text-black outline-none" type="text" placeholder="Password" onChange={handlePasswordChange}/>
+          <button className="m-2 p-2 border w-[150px] h-[50px]" onClick={handleLogin}>Login</button>
+          <Link href="/signup">{"Don't have an account? Sign up"}</Link>
+        </div>
+      </div>
     </div>
   )
 }
